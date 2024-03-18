@@ -29,10 +29,10 @@ func NewMessageChannelRouter(parallelConsumerCount int) *MessageChannelRouter {
 	}
 
 	return &MessageChannelRouter{
+		parallelConsumerCount:  parallelConsumerCount,
 		MessageChannelMap:      messageChannelMap,
 		StopChannelMap:         stopChannelMap,
 		ChannelConsumerMap:     channelConsumerMap,
-		parallelConsumerCount:  parallelConsumerCount,
 		IncomingMessageChannel: make(chan *Message),
 	}
 }
