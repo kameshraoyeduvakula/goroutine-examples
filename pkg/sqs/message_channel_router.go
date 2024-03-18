@@ -5,6 +5,10 @@ import (
 	"hash/fnv"
 )
 
+var (
+	ChannelBufferSize = 100
+)
+
 // Stop is a message to stop the consumer
 type Stop struct{}
 
@@ -23,8 +27,8 @@ func NewMessageChannelRouter(parallelConsumerCount int) *MessageChannelRouter {
 	stopChannelMap := make([]chan Stop, parallelConsumerCount)
 	channelConsumerMap := make([]*MessageChannelConsumer, parallelConsumerCount)
 	for i := 0; i < parallelConsumerCount; i++ {
-		messageChannelMap[i] = make(chan *Message)
-		stopChannelMap[i] = make(chan Stop)
+		messageChannelMap[i] = make(chan *Message, ChannelBufferSize)
+		stopChannelMap[i] = make(chan Stop, 1)
 		channelConsumerMap[i] = NewMessageChannelConsumer(messageChannelMap[i], stopChannelMap[i])
 	}
 
@@ -33,7 +37,7 @@ func NewMessageChannelRouter(parallelConsumerCount int) *MessageChannelRouter {
 		MessageChannelMap:      messageChannelMap,
 		StopChannelMap:         stopChannelMap,
 		ChannelConsumerMap:     channelConsumerMap,
-		IncomingMessageChannel: make(chan *Message),
+		IncomingMessageChannel: make(chan *Message, ChannelBufferSize),
 	}
 }
 
