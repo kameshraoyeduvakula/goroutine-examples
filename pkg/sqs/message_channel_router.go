@@ -54,8 +54,14 @@ func (mcr *MessageChannelRouter) Run() {
 		select {
 		case message := <-mcr.IncomingMessageChannel:
 			{
-				hash := mcr.hash(message.Body)
-				mcr.MessageChannelMap[hash] <- message
+				// Hash the message to get the index of the message channel.
+				// We are using message.Body to find the hash index in this example.
+				// But this could be any field in the message on which you wish to route or group message processing into
+				// a single channel.
+				hashedIndex := mcr.hash(message.Body)
+
+				// Route the message to the appropriate message channel
+				mcr.MessageChannelMap[hashedIndex] <- message
 			}
 		}
 	}

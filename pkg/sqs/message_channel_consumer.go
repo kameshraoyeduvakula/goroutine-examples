@@ -29,6 +29,10 @@ func (mcc *MessageChannelConsumer) Run() {
 				// Process the message
 				fmt.Printf("Self: %v", mcc)
 				fmt.Printf("Processing message: %s\n", message.Body)
+
+				// Acknowledge the message
+				fmt.Println("Acknowledging the message")
+				// sqs.Ack(message)
 			}
 		case <-mcc.StopChannel:
 			{
